@@ -1,4 +1,11 @@
+import { useState } from 'react';
 import './Visualizer.css';
+
+/*
+1) Fixed an issue where if drew over another, the walls would disappear 
+2) Implemented button to put start, end, wall nodes 
+3) Currently an issue with multiple start/end nodes possible ... will fix 
+*/
 
 function getData(){
     let numRows =  10;
@@ -22,22 +29,33 @@ export const Visualizer = () => {
     let numRows = data.numRows;
     let numCols = data.numCols;
 
-    const handleClick = event => {
-        console.log(event.currentTarget.id);
+    const [nodeType, setNode] = useState("Walls");
+
+    const handleClick = (event) => {
+        console.log(nodeType)
+        //console.log(event.currentTarget.id);
         let id = event.currentTarget.id;
         if(event.button === 0){
             if(document.getElementById(id).style.backgroundColor === "navy"){
                 document.getElementById(id).style.backgroundColor = "white";
                 table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'unvisited';
             }
-            else{
-                document.getElementById(id).style.backgroundColor = "navy";
+            else if (nodeType === "Walls") {
+                document.getElementById(id).style.backgroundColor = "dodgerblue";
+                //there is a potential issue with getting the 2nd subscript since it can be a value 
+                //greater than 1 char ... confirm with michael before making changes
                 table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'wall';
+            }
+            else if(nodeType === "End") { 
+                document.getElementById(id).style.backgroundColor = "blueviolet";
+            }
+            else if(nodeType === "Start") { 
+                document.getElementById(id).style.backgroundColor = "lightcoral";
             }
         }
       };
 
-      const handleClearGrid = () => {
+    const handleClearGrid = () => {
         for(let i = 0; i<numRows; i++){
             for(let j = 0; j<numCols; j++){
                 document.getElementById(i+'-'+j).style.backgroundColor = "white";
@@ -46,10 +64,10 @@ export const Visualizer = () => {
         }
       }
       
-      const handleClearWalls = () => {
+    const handleClearWalls = () => {
         for(let i = 0; i<numRows; i++){
             for(let j = 0; j<numCols; j++){
-                if(document.getElementById(i+'-'+j).style.backgroundColor === "navy"){
+                if(document.getElementById(i+'-'+j).style.backgroundColor === "dodgerblue"){
                     table[i][j].className = 'unvisited';
                     document.getElementById(i+'-'+j).style.backgroundColor = "white";
                 }
@@ -73,6 +91,11 @@ export const Visualizer = () => {
             <div className='button-bar'>
                 <button className='clear-grid-btn' onClick={handleClearGrid}>Clear Grid</button>
                 <button className='clear-walls-btn' onClick={handleClearWalls}>Clear Walls</button>
+                <select name="Items to Place" onClick={(event) => setNode(event.target.value)}>
+                    <option value="Start">Start</option>
+                    <option value="End">End</option>
+                    <option value="Walls">Walls</option>
+                </select>
             </div>
         </div>
     );
