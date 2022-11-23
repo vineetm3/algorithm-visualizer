@@ -76,6 +76,9 @@ export const Visualizer = () => {
         }
       }
     
+    /*
+    Can completely get rid of this method if we use a set, but leaving for now ... will optimize later
+    */
     const isClear = () => { 
         let searchingFor; 
         if(nodeType === "Start") { 
