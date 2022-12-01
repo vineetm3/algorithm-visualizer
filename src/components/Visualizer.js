@@ -8,18 +8,31 @@ import './Visualizer.css';
 -> probably we can test it out on bfs 
 */
 
+function searchNodes(){
+    
+}
+
+function createNode(rowVal, colVal){
+    return {
+        className:'unvisited',
+        seen: 'false', 
+        row: rowVal, 
+        col: colVal, 
+        //this one we need to calculate before hand 
+        distanceToFinishNode: null, 
+    };
+}
+
 function getData(){
-    let numRows =  10;
-    let numCols = 20;
-    let table = [];
-    let row = Array(numCols);
-    for(let i = 0; i<numRows; i++){
-        for(let j = 0; j<numCols; j++){
-            row[j] = {
-                className:'unvisited',
-            }
-        }
-        table.push(row);
+    let numRows =  5;
+    let numCols = 5;
+    const table = [];
+    for (let row = 0; row < numRows; row++) {
+      const currentRow = [];
+      for (let col = 0; col < numCols; col++) {
+        currentRow.push(createNode(row, col));
+      }
+      table.push(currentRow);
     }
     return { table, numRows, numCols };
 }
@@ -52,6 +65,7 @@ export const Visualizer = () => {
             else if(nodeType === "Start" && isClear()) { 
                 document.getElementById(id).style.backgroundColor = "lightcoral";
                 table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'start';
+                console.log(table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))]);
             }
         }
       };
