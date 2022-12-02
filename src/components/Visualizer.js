@@ -2,15 +2,25 @@ import { useState } from 'react';
 import './Visualizer.css';
 
 /*
-1) Fixed an issue where if drew over another, the walls would disappear 
-2) Implemented button to put start, end, wall nodes 
-3) Next step is to start implementing an algorithim itself
--> probably we can test it out on bfs 
+1) Have a main visualize method where we pass in the algo name
+2) implement each algo taking in grid, start, end 
+3) algo runs
+4) call our animation method that lights up shortest path 
 */
 
-function searchNodes(){
-    
-}
+/*
+Vineet: 
+-> relate each node to start/finish 
+-> have state start and finish to access anywhere (outside render)
+
+Michael: 
+-> study repo of how the algorithim tracks which nodes to light up etc
+*/
+let val = 0;
+let data = getData();
+let table = data.table;
+let start;
+let end;
 
 function createNode(rowVal, colVal){
     return {
@@ -18,8 +28,9 @@ function createNode(rowVal, colVal){
         seen: 'false', 
         row: rowVal, 
         col: colVal, 
-        //this one we need to calculate before hand 
+        //these we need to calculate before hand 
         distanceToFinishNode: null, 
+        distanceToStartNode: null
     };
 }
 
@@ -37,9 +48,17 @@ function getData(){
     return { table, numRows, numCols };
 }
 
+function updateObjects(table, numRows, numCols) { 
+    for(let row = 0; row < numRows; row++) { 
+        for(let col = 0; col < numCols; col++) { 
+            table[row][col].distanceToStartNode = Math.sqrt((row - start.row)**2 + (col - start.col)**2);
+            table[row][col].distanceToFinishNode = Math.sqrt((row - end.row)**2 + (col - end.col)**2);
+        }
+    }
+    console.log(table);
+}
+
 export const Visualizer = () => {
-    let data = getData();
-    let table = data.table;
     let numRows = data.numRows;
     let numCols = data.numCols;
 
@@ -61,12 +80,20 @@ export const Visualizer = () => {
             else if(nodeType === "End" && isClear()) { 
                 document.getElementById(id).style.backgroundColor = "blueviolet";
                 table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'end';
+                end = table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))];
+                val++;
             }
             else if(nodeType === "Start" && isClear()) { 
                 document.getElementById(id).style.backgroundColor = "lightcoral";
                 table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'start';
-                console.log(table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))]);
+                start = table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))];
+                val++;
             }
+        }
+
+        if(val === 2) { 
+            updateObjects(table, numRows, numCols); 
+            val = -1; 
         }
       };
 
@@ -89,10 +116,7 @@ export const Visualizer = () => {
             }
         }
       }
-    
-    /*
-    Can completely get rid of this method if we use a set, but leaving for now ... will optimize later
-    */
+
     const isClear = () => { 
         let searchingFor; 
         if(nodeType === "Start") { 
