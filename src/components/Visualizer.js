@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import React, { useContext } from 'react';
+import { DataContext } from '../DataProvider';
 import './Visualizer.css';
+import { astar } from '../algorithms/astar';
 
 /*
 1) Have a main visualize method where we pass in the algo name
@@ -22,32 +25,6 @@ let table = data.table;
 let start;
 let end;
 
-function createNode(rowVal, colVal){
-    return {
-        className:'unvisited',
-        seen: 'false', 
-        row: rowVal, 
-        col: colVal, 
-        //these we need to calculate before hand 
-        distanceToFinishNode: null, 
-        distanceToStartNode: null
-    };
-}
-
-function getData(){
-    let numRows =  5;
-    let numCols = 5;
-    const table = [];
-    for (let row = 0; row < numRows; row++) {
-      const currentRow = [];
-      for (let col = 0; col < numCols; col++) {
-        currentRow.push(createNode(row, col));
-      }
-      table.push(currentRow);
-    }
-    return { table, numRows, numCols };
-}
-
 function updateObjects(table, numRows, numCols) { 
     for(let row = 0; row < numRows; row++) { 
         for(let col = 0; col < numCols; col++) { 
@@ -56,9 +33,12 @@ function updateObjects(table, numRows, numCols) {
         }
     }
     console.log(table);
+
+    //pass in a setTableData function here
 }
 
 export const Visualizer = () => {
+    const {tableData, setTableData, algorithmType} = useContext(DataContext);
     let numRows = data.numRows;
     let numCols = data.numCols;
 
@@ -151,6 +131,11 @@ export const Visualizer = () => {
             <div className='button-bar'>
                 <button className='clear-grid-btn' onClick={handleClearGrid}>Clear Grid</button>
                 <button className='clear-walls-btn' onClick={handleClearWalls}>Clear Walls</button>
+               <button className='visualize' onClick={() => {
+                    if(algorithmType === 'A*'){
+                        astar(tableData, setTableData);
+                    }
+               }}>Visualize</button>
                 <select name="Items to Place" onClick={(event) => setNode(event.target.value)}>
                     <option value="Walls">Walls</option>
                     <option value="Start">Start</option>

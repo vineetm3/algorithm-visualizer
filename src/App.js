@@ -1,13 +1,16 @@
 import './App.css';
+import { DataProvider } from './DataProvider';
 import { NavBar } from './components/NavBar'
 import { Visualizer } from './components/Visualizer'
 
 function App() {
   return (
-    <div className="App">
-      <NavBar></NavBar>
-      <Visualizer></Visualizer>
-    </div>
+    <DataProvider>
+      <div className="App">
+        <NavBar/>
+        <Visualizer/>
+      </div>
+    </DataProvider>
   );
 }
 
