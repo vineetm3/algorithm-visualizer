@@ -3,6 +3,7 @@ import { DataProvider } from './DataProvider';
 import { NavBar } from './components/NavBar'
 import { Visualizer } from './components/Visualizer'
 
+//Believe having DataProvider here gives us the power to use its contents in NavBar + Visualizer 
 function App() {
   return (
     <DataProvider>

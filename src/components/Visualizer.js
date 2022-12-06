@@ -11,17 +11,9 @@ import { astar } from '../algorithms/astar';
 4) call our animation method that lights up shortest path 
 */
 
-/*
-Vineet: 
--> relate each node to start/finish 
--> have state start and finish to access anywhere (outside render)
-
-Michael: 
--> study repo of how the algorithim tracks which nodes to light up etc
-*/
 let val = 0;
-let data = getData();
-let table = data.table;
+//let data = getData();
+//let table = data.table;
 let start;
 let end;
 
@@ -30,6 +22,7 @@ function updateObjects(table, numRows, numCols) {
         for(let col = 0; col < numCols; col++) { 
             table[row][col].distanceToStartNode = Math.sqrt((row - start.row)**2 + (col - start.col)**2);
             table[row][col].distanceToFinishNode = Math.sqrt((row - end.row)**2 + (col - end.col)**2);
+            table[row][col].combinedDistance = table[row][col].distanceToStartNode + table[row][col].distanceToFinishNode;
         }
     }
     console.log(table);
@@ -39,8 +32,8 @@ function updateObjects(table, numRows, numCols) {
 
 export const Visualizer = () => {
     const {tableData, setTableData, algorithmType} = useContext(DataContext);
-    let numRows = data.numRows;
-    let numCols = data.numCols;
+    let numRows = tableData.numRows;
+    let numCols = tableData.numCols;
 
     const [nodeType, setNode] = useState("Walls");
 
@@ -49,30 +42,30 @@ export const Visualizer = () => {
         if(event.button === 0){
             if(document.getElementById(id).style.backgroundColor === "navy"){
                 document.getElementById(id).style.backgroundColor = "white";
-                table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'unvisited';
+                tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'unvisited';
             }
             else if (nodeType === "Walls") {
                 document.getElementById(id).style.backgroundColor = "dodgerblue";
                 //there is a potential issue with getting the 2nd subscript since it can be a value 
                 //greater than 1 char ... confirm with michael before making changes
-                table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'wall';
+                tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'wall';
             }
             else if(nodeType === "End" && isClear()) { 
                 document.getElementById(id).style.backgroundColor = "blueviolet";
-                table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'end';
-                end = table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))];
+                tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'end';
+                end = tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))];
                 val++;
             }
             else if(nodeType === "Start" && isClear()) { 
                 document.getElementById(id).style.backgroundColor = "lightcoral";
-                table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'start';
-                start = table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))];
+                tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'start';
+                start = tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))];
                 val++;
             }
         }
 
         if(val === 2) { 
-            updateObjects(table, numRows, numCols); 
+            updateObjects(tableData.table, tableData.numRows, tableData.numCols); 
             val = -1; 
         }
       };
@@ -81,7 +74,7 @@ export const Visualizer = () => {
         for(let i = 0; i<numRows; i++){
             for(let j = 0; j<numCols; j++){
                 document.getElementById(i+'-'+j).style.backgroundColor = "white";
-                table[i][j].className = 'unvisited';
+                tableData.table[i][j].className = 'unvisited';
             }
         }
       }
@@ -90,7 +83,7 @@ export const Visualizer = () => {
         for(let i = 0; i<numRows; i++){
             for(let j = 0; j<numCols; j++){
                 if(document.getElementById(i+'-'+j).style.backgroundColor === "dodgerblue"){
-                    table[i][j].className = 'unvisited';
+                    tableData.table[i][j].className = 'unvisited';
                     document.getElementById(i+'-'+j).style.backgroundColor = "white";
                 }
             }
@@ -119,7 +112,7 @@ export const Visualizer = () => {
         <div className='main-content'>
             <table cellSpacing={'0'}>
                 <tbody>
-                    {table.map(((row, rowNumber) => {
+                    {tableData.table.map(((row, rowNumber) => {
                         return (
                             <tr id={'' + rowNumber} key={''+rowNumber}>
                                 {row.map((_, columnNumber) => <td id={'' + rowNumber + '-' + columnNumber} key={'' + rowNumber + '-' + columnNumber} onClick={handleClick} onDragEnter={handleClick}></td>)}
