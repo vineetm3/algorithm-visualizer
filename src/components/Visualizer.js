@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { DataContext } from '../DataProvider';
 import './Visualizer.css';
 import { astar } from '../algorithms/astar';
+import { getNeighbors } from '../algorithms/astar';
 
 /*
 1) Have a main visualize method where we pass in the algo name
@@ -10,8 +11,8 @@ import { astar } from '../algorithms/astar';
 3) algo runs
 4) call our animation method that lights up shortest path 
 */
-
-let val = 0;
+let setStartNode = false;
+let setEndNode = false;
 //let data = getData();
 //let table = data.table;
 let start;
@@ -54,19 +55,19 @@ export const Visualizer = () => {
                 document.getElementById(id).style.backgroundColor = "blueviolet";
                 tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'end';
                 end = tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))];
-                val++;
+                setEndNode = true;
             }
             else if(nodeType === "Start" && isClear()) { 
                 document.getElementById(id).style.backgroundColor = "lightcoral";
                 tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))].className = 'start';
                 start = tableData.table[parseInt(id.charAt(0))][parseInt(id.charAt(id.length-1))];
-                val++;
+                setStartNode = true;
             }
         }
 
-        if(val === 2) { 
-            updateObjects(tableData.table, tableData.numRows, tableData.numCols); 
-            val = -1; 
+        if(setStartNode && setEndNode) { 
+            updateObjects(tableData.table, tableData.numRows, tableData.numCols);
+            console.log(getNeighbors(tableData.table[1][0], tableData));
         }
       };
 

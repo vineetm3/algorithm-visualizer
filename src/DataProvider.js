@@ -14,13 +14,14 @@ function createNode(rowVal, colVal){
         row: rowVal, 
         col: colVal, 
         //these we need to calculate before hand 
-        distanceToFinishNode: null, 
-        distanceToStartNode: null, 
-        combinedDistance: null
+        hCost: null, 
+        gCost: null, 
+        fCost: null
     };
 }
 
 //creates our main table that we will eventually see on the screen 
+//NOTE 
 const initData = () => {
         let numRows =  5;
         let numCols = 5;
@@ -36,7 +37,9 @@ const initData = () => {
 }
 
 // some random function that i got no clue what it does 
-export const setDataDef = () => {};
+export const setDataDef = () => {
+
+};
 
 //creates a context (global for all react components) which has the 
 //table, setData, algorithimType, setAlgorithim
