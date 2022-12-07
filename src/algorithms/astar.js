@@ -19,132 +19,138 @@ import { DataContext } from "../DataProvider";
  * fCost = combined dis
  */
 
-//might need to use a different dataStructures
-const open = new Map();
-const closed = new Set();
-
 export function getNeighbors(currentNode, tableData) { 
-
-  //Check if corner:
-  // -If top left corner: [0,0]
-  //  - neighbors = [1,0], [1,1],  [0,1]
-  // -If top right corner: [0, numCols-1]
-  //  - neighbors = [0,numCols-2], [1,numCols-2],  [1, numCols-1]
-  // -If bottom left corner: [numRows-1, 0]
-  //  - neighbors = [numRows-2, 0], [numRows-2, 1], [numRows-1, 1]
-  // -If bottom right corner: [numRows-1, numCols-1]
-  //  - neighbors = [numRows-1, numCols-2], [numRows-2, numCols-2], [numRows-2, numCols-1]
-  //Check if Vertical Edge:
-  // - 
-
-
     //is this the right data-structure? 
     let neighbors = [];
 
-    //CHECK IF A CORNER:
-    if(currentNode.row === 0 && currentNode.col === 0 ){
-      neighbors.push(tableData.table[1][0])
-      neighbors.push(tableData.table[1][1])
-      neighbors.push(tableData.table[0][1])
-    }
-    else if(currentNode.row === 0 && currentNode.col === tableData.numCols-1){
-      neighbors.push(tableData.table[0][tableData.numCols-2])
-      neighbors.push(tableData.table[1][tableData.numCols-2])
-      neighbors.push(tableData.table[1][tableData.numCols-1])
-    }
-    else if(currentNode.row === tableData.numRows-1 && currentNode.col === 0){
-      neighbors.push(tableData.table[tableData.numRows-2][0])
-      neighbors.push(tableData.table[tableData.numRows-2][1])
-      neighbors.push(tableData.table[tableData.numRows-1][1])
-    }
-    else if(currentNode.row === tableData.numRows-1 && currentNode.col === tableData.numCols-1){
-      neighbors.push(tableData.table[tableData.numRows-1][tableData.numCols-2])
-      neighbors.push(tableData.table[tableData.numRows-2][tableData.numCols-2])
-      neighbors.push(tableData.table[tableData.numRows-2][tableData.numCols-1])
-    }
+    for (let i = currentNode.row - 1; i <= currentNode.row + 1; i++) {
+      for (let j = currentNode.col - 1; j <= currentNode.col + 1; j++) {
+          // check if (i,j) is in array bounds
+          if (i >= 0 && j >= 0 && i < tableData.numRows && j < tableData.numCols) {
+              // the point isn't its own neighbour
+              if (!(i === currentNode.row && j === currentNode.col))
+                  neighbors.push(tableData.table[i][j]);
+          }
+      }
+  }
 
-    //CHECK IF HORIZONTAL EDGE:
-    else if(currentNode.row === 0){
-      for(let rowNumber = currentNode.row; rowNumber<currentNode.row+2; rowNumber++){
-        for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
-          if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-            neighbors.push(tableData.table[rowNumber][colNumber]);
-          }
-        }
-      }
-    }
-    else if(currentNode.row === tableData.numRows-1){
-      for(let rowNumber = currentNode.row; rowNumber<currentNode.row-2; rowNumber--){
-        for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
-          if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-            neighbors.push(tableData.table[rowNumber][colNumber]);
-          }
-        }
-      }
-    }
+    // //CHECK IF A CORNER:
+    // if(currentNode.row === 0 && currentNode.col === 0 ){
+    //   neighbors.push(tableData.table[1][0])
+    //   neighbors.push(tableData.table[1][1])
+    //   neighbors.push(tableData.table[0][1])
+    // }
+    // else if(currentNode.row === 0 && currentNode.col === tableData.numCols-1){
+    //   neighbors.push(tableData.table[0][tableData.numCols-2])
+    //   neighbors.push(tableData.table[1][tableData.numCols-2])
+    //   neighbors.push(tableData.table[1][tableData.numCols-1])
+    // }
+    // else if(currentNode.row === tableData.numRows-1 && currentNode.col === 0){
+    //   neighbors.push(tableData.table[tableData.numRows-2][0])
+    //   neighbors.push(tableData.table[tableData.numRows-2][1])
+    //   neighbors.push(tableData.table[tableData.numRows-1][1])
+    // }
+    // else if(currentNode.row === tableData.numRows-1 && currentNode.col === tableData.numCols-1){
+    //   neighbors.push(tableData.table[tableData.numRows-1][tableData.numCols-2])
+    //   neighbors.push(tableData.table[tableData.numRows-2][tableData.numCols-2])
+    //   neighbors.push(tableData.table[tableData.numRows-2][tableData.numCols-1])
+    // }
 
-    //CHECK IF VERTICAL EDGE:
-    else if(currentNode.col === 0){
-      for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
-        for(let colNumber = currentNode.col; colNumber < currentNode.col+2; colNumber++){
-          if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-            neighbors.push(tableData.table[rowNumber][colNumber]);
-          }
-        }
-      }
-    }
-    else if(currentNode.col === tableData.numCols-1){
-      for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
-        for(let colNumber = currentNode.col-1; colNumber < currentNode.col+1; colNumber++){
-          if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-            neighbors.push(tableData.table[rowNumber][colNumber]);
-          }
-        }
-      }
-    }
+    // //CHECK IF HORIZONTAL EDGE:
+    // else if(currentNode.row === 0){
+    //   for(let rowNumber = currentNode.row; rowNumber<currentNode.row+2; rowNumber++){
+    //     for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
+    //       if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
+    //         neighbors.push(tableData.table[rowNumber][colNumber]);
+    //       }
+    //     }
+    //   }
+    // }
+    // else if(currentNode.row === tableData.numRows-1){
+    //   for(let rowNumber = currentNode.row; rowNumber<currentNode.row-2; rowNumber--){
+    //     for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
+    //       if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
+    //         neighbors.push(tableData.table[rowNumber][colNumber]);
+    //       }
+    //     }
+    //   }
+    // }
 
-    //Must be a node surrounded by neighbor nodes
-    else{
-      console.log("Entered Other");
-      for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
-        for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
-            if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-              neighbors.push(tableData.table[rowNumber][colNumber]);
-            }
-        }
-      }
-    }
+    // //CHECK IF VERTICAL EDGE:
+    // else if(currentNode.col === 0){
+    //   for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
+    //     for(let colNumber = currentNode.col; colNumber < currentNode.col+2; colNumber++){
+    //       if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
+    //         neighbors.push(tableData.table[rowNumber][colNumber]);
+    //       }
+    //     }
+    //   }
+    // }
+    // else if(currentNode.col === tableData.numCols-1){
+    //   for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
+    //     for(let colNumber = currentNode.col-1; colNumber < currentNode.col+1; colNumber++){
+    //       if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
+    //         neighbors.push(tableData.table[rowNumber][colNumber]);
+    //       }
+    //     }
+    //   }
+    // }
+
+    // //Must be a node surrounded by neighbor nodes
+    // else{
+    //   console.log("Entered Other");
+    //   for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
+    //     for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
+    //         if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
+    //           neighbors.push(tableData.table[rowNumber][colNumber]);
+    //         }
+    //     }
+    //   }
+    // }
 
     return neighbors;
 }
 
-export function astar(tableData, setTableData, start, end) {
+export function astar(tableData, setTableData, startNode, endNode) {
   console.log("In astar");
 
-  //has value when start node has not even been decided ... weird bug to fix later
-  //start has null values for distance, need to fix
-  open.put(0, start);
+  //create arrays
+  const open = [];
+  const closed = [];
 
-  while (open.size > 0) {
-    let curr = open.get(0);
-    let deleted = 0;
+  //add the start node first
+  open.push(startNode);
 
-    for (let i = 1; i < open.size; i += 1) {
-        //beware a get to a non-existing key, might need to check for that
-      if ((open.get(i) < curr) || (open.get(i).fCost === curr.fCost && open.get(i).hCost < curr.hCost)) {
-        curr = open.get(i);
-        deleted = i;
-      }
+  //while we have not reached the end node...
+  while (open.length() > 0) {
+
+    //sort the availible nodes by fCost (least fCost to greatest fCost) note: fCost is the sum of the distance to the startNode and the distance to the endNode
+    let sortedOpen = open.sort((a, b) => (a.fCost > b.fCost) ? 1 : (a.fCost < b.fCost) ? -1 : 0);
+
+    //let the currentNode to be evaluated be the node with the lowest fCost
+    let curr = sortedOpen[0];
+    
+    //remove the node from the open list
+    open.shift();
+
+    //add the currentNode to the already evaluated list
+    closed.push(curr);
+
+    //currentNode is the end node
+    if(curr.hCost === 0){
+      console.log("CurrentNode is End Node");
+      return;
     }
-    open.delete(deleted);
-    closed.add(curr);
 
-    if(curr === end) { 
-        console.log("mission accomplished");
-        return;
-    }
-
+    //get the surrounding neighbors of the currentNode
     let neighbors = getNeighbors(curr, tableData);
+
+    //Implement for each loop here:
+
+    neighbors.filter((neighbor) => !(neighbor.className === 'wall') && !closed.includes(neighbor)).forEach((neighbor) => {
+      //do A* stuff
+    })
+
   }
 }
 

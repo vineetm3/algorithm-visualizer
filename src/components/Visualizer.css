@@ -23,12 +23,20 @@
     transition: 0.2s;
 }
 
-.clear-walls-btn:hover, .clear-grid-btn:hover{
+.clear-walls-btn:hover, .clear-grid-btn:hover, .visualize-btn:hover{
     transform: scale(1.05);
 }
 
 .clear-walls-btn{
     background-color: #FED8B1;
+    border-style: none;
+    padding: 10px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.visualize-btn{
+    background-color: #91E0FF;
     border-style: none;
     padding: 10px;
     border-radius: 10px;

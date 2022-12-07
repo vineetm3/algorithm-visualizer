@@ -67,7 +67,7 @@ export const Visualizer = () => {
 
         if(setStartNode && setEndNode) { 
             updateObjects(tableData.table, tableData.numRows, tableData.numCols);
-            console.log(getNeighbors(tableData.table[1][0], tableData));
+            console.log(getNeighbors(tableData.table[0][0], tableData));
         }
       };
 
@@ -125,7 +125,7 @@ export const Visualizer = () => {
             <div className='button-bar'>
                 <button className='clear-grid-btn' onClick={handleClearGrid}>Clear Grid</button>
                 <button className='clear-walls-btn' onClick={handleClearWalls}>Clear Walls</button>
-               <button className='visualize' onClick={() => {
+               <button className='visualize-btn' onClick={() => {
                     if(algorithmType === 'A*'){
                         astar(tableData, setTableData, start, end);
                     }
