@@ -106,6 +106,10 @@ export function astar(tableData, setTableData, start, end) {
     for (let i = 0; i < neighbors.length; i++) {
       let neighbor = neighbors[i];
 
+      if(neighbor.className !== "start" && neighbor.className !== "end") { 
+        document.getElementById(neighbor.row + "-" + neighbor.col).style.backgroundColor = "green";
+      }
+
       if(neighbor.className === "wall" || closedSet.includes(neighbor) ) { 
         continue;
       }

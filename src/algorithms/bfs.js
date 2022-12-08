@@ -22,7 +22,12 @@ export function bfs(grid, startNode, finishNode) {
     ) {
 
       currentNode.seen = true;
-        visitedNodesInOrder.push(currentNode);
+      visitedNodesInOrder.push(currentNode);
+
+      if(currentNode.className !== "start" && currentNode.className !== "end") { 
+        document.getElementById(currentNode.row + "-" + currentNode.col).style.backgroundColor = "orange";
+      }
+
       const { col, row } = currentNode;
       let nextNode;
       if (row > 0) {
