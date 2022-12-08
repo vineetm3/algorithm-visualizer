@@ -22,7 +22,6 @@ let start;
 let end;
 let begin;
 let stop;
-let nodes;
 
 function updateObjects(table, numRows, numCols) {
   for (let row = 0; row < numRows; row++) {
@@ -42,7 +41,7 @@ function updateObjects(table, numRows, numCols) {
 }
 
 export const Visualizer = () => {
-  const { tableData, setTableData, algoType } = useContext(DataContext);
+  const { tableData, setTableData, algoType, path} = useContext(DataContext);
 
   let numRows = tableData.numRows;
   let numCols = tableData.numCols;
@@ -101,6 +100,10 @@ export const Visualizer = () => {
         tableData.table[i][j].className = "unvisited";
       }
     }
+    path.path = [];
+    setDate(0);
+    // start = null; 
+    // end = null; 
   };
 
   const handleClearWalls = () => {
@@ -200,29 +203,30 @@ export const Visualizer = () => {
           className="visualize-btn"
           onClick={() => {
             if (algoType.algo === "A*") {
-              console.log(algoType.algo);
+              path.path = [];
+              begin = 0;
+              stop = 0;
               begin = Date.now();
-              let path = astar(tableData, setTableData, start, end);
+              path.path = astar(tableData, setTableData, start, end);
               stop = Date.now();
-              console.log(begin);
-              console.log(stop);
-              console.log(stop - begin);
               setDate(stop - begin);
               //delta = stop - begin;
-              glowUp(path);
+              glowUp(path.path);
             } 
             else if (algoType.algo === "DFS") {
               console.log(algoType.algo);
             } 
             else if (algoType.algo === "BFS") {
               console.log(algoType.algo);
+              path.path = [];
+              begin = 0; 
+              stop = 0;
               begin = Date.now();
-              let path = bfs(tableData, start, end);
+              let fakePath = bfs(tableData, start, end);
               stop = Date.now();
               setDate(stop - begin);
-              console.log(path.length);
-              let realPath = getNodesInShortestPathOrder(end);
-              glowUp(realPath);
+              path.path = getNodesInShortestPathOrder(end);
+              glowUp(path.path);
               
             } 
             else if (algoType.algo === "Dijkstra") {
@@ -243,6 +247,7 @@ export const Visualizer = () => {
       </div>
       <div>
         <h3>Time to Run {algoType.algo} (seconds): {date / 1000000}</h3>
+        <h3>Nodes in shortest path: {path.path.length}</h3>
       </div>
     </div>
   );
