@@ -18,6 +18,9 @@ let setEndNode = false;
 //let table = data.table;
 let start;
 let end;
+let begin;
+let stop;
+let delta;
 
 function updateObjects(table, numRows, numCols) { 
     for(let row = 0; row < numRows; row++) { 
@@ -38,6 +41,7 @@ export const Visualizer = () => {
     let numCols = tableData.numCols;
 
     const [nodeType, setNode] = useState("Walls");
+    const [date, setDate] = useState("tbd")
 
     const handleClick = (event) => {
         let id = event.currentTarget.id;
@@ -137,7 +141,14 @@ export const Visualizer = () => {
                 <button className='clear-grid-btn' onClick={handleClearGrid}>Clear Grid</button>
                 <button className='clear-walls-btn' onClick={handleClearWalls}>Clear Walls</button>
                <button className='visualize-btn' onClick={() => {
+                begin = Date.now();
                 let path = astar(tableData, setTableData, start, end);
+                stop = Date.now();
+                console.log(begin);
+                console.log(stop);
+                console.log(stop-begin);
+                setDate(stop - begin);
+                //delta = stop - begin;
                 glowUp(path);
                 }}>Visualize</button>
                 <select name="Items to Place" onClick={(event) => setNode(event.target.value)}>
@@ -145,6 +156,9 @@ export const Visualizer = () => {
                     <option value="Start">Start</option>
                     <option value="End">End</option>
                 </select>
+            </div>
+            <div>
+                <h3>Time to Run (seconds): {date / 1000}</h3>
             </div>
         </div>
     );
