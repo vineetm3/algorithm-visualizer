@@ -14,10 +14,9 @@ import { dijkstra } from "../algorithms/dijkstra";
 3) algo runs
 4) call our animation method that lights up shortest path 
 */
+
 let setStartNode = false;
 let setEndNode = false;
-//let data = getData();
-//let table = data.table;
 let start;
 let end;
 let begin;
@@ -157,7 +156,7 @@ export const Visualizer = () => {
       if(algoType.algo === "BFS") {
         document.getElementById(
             path[i].row + "-" + path[i].col
-          ).style.backgroundColor = "LightGreen";
+          ).style.backgroundColor = "yellow";
       }
     }
   };

@@ -1,24 +1,8 @@
 /**
- * Algo from: https://www.youtube.com/watch?v=mZfyt03LDH4&list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW&index=3
- */
-
-/**
-  What is inside tableData: 
-  tableData: initData,
-  setTableData: setDataDef,
-  algorithmType: 'A*',
-  setAlgorithmType: () => {},
- */
-
-/**
  * gCost = dis to start
  * hCost = dis to end
  * fCost = combined dis
  */
-
-//might need to use a different dataStructures
-// const open = new Map();
-// const closed = new Set();
 
 export function getNeighbors(currentNode, tableData) {
   //is this the right data-structure?
@@ -37,33 +21,21 @@ export function getNeighbors(currentNode, tableData) {
   return neighbors;
 }
 
-function getDistance(nodeA, nodeB) { 
-  let distX = Math.abs(nodeA.row - nodeB.row); 
+function getDistance(nodeA, nodeB) {
+  let distX = Math.abs(nodeA.row - nodeB.row);
   let distY = Math.abs(nodeA.col - nodeB.col);
 
-  if(distX > distY) { 
-    return 14*distY + 10*(distX - distY);
+  if (distX > distY) {
+    return 14 * distY + 10 * (distX - distY);
   }
-  return 14*distX + 10*(distY - distX)
+  return 14 * distX + 10 * (distY - distX);
 }
-
-// function reTracePath(start, end) { 
-//   let path = new Array();
-//   let curr = end; 
-
-//   while(curr !== start) { 
-//     path.push(curr);
-//     curr = curr.parent;
-//   }
-  
-//   return path.reverse();
-// }
 
 function heuristic(position0, position1) {
   let d1 = Math.abs(position1.x - position0.x);
   let d2 = Math.abs(position1.y - position0.y);
 
-  return (d1 + d2);
+  return d1 + d2;
 }
 
 export function astar(tableData, setTableData, start, end) {
@@ -71,7 +43,7 @@ export function astar(tableData, setTableData, start, end) {
   let closedSet = [];
   let path = [];
 
-  openSet.push(start)
+  openSet.push(start);
 
   while (openSet.length > 0) {
     //assumption lowest index is the first one to begin with
@@ -101,45 +73,31 @@ export function astar(tableData, setTableData, start, end) {
     //add current to closedSet
     closedSet.push(current);
 
-    let neighbors = getNeighbors(current, tableData)
+    let neighbors = getNeighbors(current, tableData);
 
     for (let i = 0; i < neighbors.length; i++) {
       let neighbor = neighbors[i];
 
-      if(neighbor.className !== "start" && neighbor.className !== "end") { 
-        document.getElementById(neighbor.row + "-" + neighbor.col).style.backgroundColor = "green";
+      if (neighbor.className !== "start" && neighbor.className !== "end") {
+        document.getElementById(
+          neighbor.row + "-" + neighbor.col
+        ).style.backgroundColor = "green";
       }
 
-      if(neighbor.className === "wall" || closedSet.includes(neighbor) ) { 
+      if (neighbor.className === "wall" || closedSet.includes(neighbor)) {
         continue;
       }
 
-      if(neighbor.className !== "end") { 
-        
+      if (neighbor.className !== "end") {
       }
 
-      // if (!closedSet.includes(neighbor)) {
-      //   let possibleG = current.gCost + 1;
-
-      //   if (!openSet.includes(neighbor)) {
-      //     openSet.push(neighbor);
-      //   } else if (possibleG >= neighbor.gCost) {
-      //     continue;
-      //   }
-
-      //   neighbor.gCost = possibleG;
-      //   neighbor.hCost = heuristic(neighbor, end);
-      //   neighbor.fCost = neighbor.gCost + neighbor.hCost;
-      //   neighbor.parent = current;
-      // }
-
       let costToMove = current.gCost + heuristic(current, neighbor);
-      if(costToMove < neighbor.gCost || !openSet.includes(neighbor)) { 
-        neighbor.gCost = costToMove; 
+      if (costToMove < neighbor.gCost || !openSet.includes(neighbor)) {
+        neighbor.gCost = costToMove;
         neighbor.hCost = heuristic(neighbor, end);
         neighbor.parent = current;
 
-        if(!openSet.includes(neighbor)) { 
+        if (!openSet.includes(neighbor)) {
           openSet.push(neighbor);
         }
       }

@@ -25,7 +25,7 @@ export function bfs(grid, startNode, finishNode) {
       visitedNodesInOrder.push(currentNode);
 
       if(currentNode.className !== "start" && currentNode.className !== "end") { 
-        document.getElementById(currentNode.row + "-" + currentNode.col).style.backgroundColor = "orange";
+        document.getElementById(currentNode.row + "-" + currentNode.col).style.backgroundColor = "green";
       }
 
       const { col, row } = currentNode;
