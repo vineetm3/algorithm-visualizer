@@ -21,9 +21,9 @@ let end;
 function updateObjects(table, numRows, numCols) { 
     for(let row = 0; row < numRows; row++) { 
         for(let col = 0; col < numCols; col++) { 
-            table[row][col].distanceToStartNode = Math.sqrt((row - start.row)**2 + (col - start.col)**2);
-            table[row][col].distanceToFinishNode = Math.sqrt((row - end.row)**2 + (col - end.col)**2);
-            table[row][col].combinedDistance = table[row][col].distanceToStartNode + table[row][col].distanceToFinishNode;
+            table[row][col].gCost = Math.sqrt((row - start.row)**2 + (col - start.col)**2);
+            table[row][col].fCost = Math.sqrt((row - end.row)**2 + (col - end.col)**2);
+            table[row][col].fCost = table[row][col].gCost + table[row][col].fCost;
         }
     }
     console.log(table);

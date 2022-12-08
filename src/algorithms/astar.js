@@ -59,50 +59,69 @@ function reTracePath(start, end) {
   return path.reverse();
 }
 
+function heuristic(position0, position1) {
+  let d1 = Math.abs(position1.x - position0.x);
+  let d2 = Math.abs(position1.y - position0.y);
+
+  return d1 + d2;
+}
+
 export function astar(tableData, setTableData, start, end) {
-  console.log("In astar");
+  let openSet = [];
+  let closedSet = [];
+  let path = [];
 
-  //has value when start node has not even been decided ... weird bug to fix later
-  //start has null values for distance, need to fix
-  console.log(start);
-  open.set(start.row + "-" + start.col, start);
-  console.log(open);
-  
-  while (open.size > 0) {
-    let curr = open.get(start.row + "-" + start.col);
-    let deleted = "";
+  openSet.push(start)
 
-    open.forEach(element => {
-      if(element.fCost < curr.fCost || element.fCost === curr.fCost && element.hCost < curr.hCost) { 
-        curr = element;
-        deleted = curr.row + "" + curr.col;
+  while (openSet.length > 0) {
+    //assumption lowest index is the first one to begin with
+    let lowestIndex = 0;
+    for (let i = 0; i < openSet.length; i++) {
+      if (openSet[i].fCost < openSet[lowestIndex].fCost) {
+        lowestIndex = i;
       }
-    });
-    
-    open.delete(deleted);
-    closed.add(curr);
+    }
+    let current = openSet[lowestIndex];
 
-    if (curr === end) {
-      console.log("mission accomplished");
-      return reTracePath(start, end);
+    if (current === end) {
+      let temp = current;
+      path.push(temp);
+      while (temp.parent) {
+        path.push(temp.parent);
+        temp = temp.parent;
+      }
+      console.log("DONE!");
+      console.log(path.reverse());
+      // return the traced path
+      return path.reverse();
     }
 
-    let neighbors = getNeighbors(curr, tableData);
+    //remove current from openSet
+    openSet.splice(lowestIndex, 1);
+    //add current to closedSet
+    closedSet.push(current);
 
-    for (let neighbor of neighbors) {
-      if (neighbor.className === "Wall" || closed.has(neighbor)) {
-        continue;
-      }
-      let newCostToNeighbor = curr.gCost + getDistance(curr, neighbor);
-      if(newCostToNeighbor < neighbor.gCost || newCostToNeighbor < !open.has(neighbor.row + "-" + neighbor.col)) { 
-        neighbor.gCost = newCostToNeighbor; 
-        neighbor.hCost = getDistance(neighbor, end);
-        neighbor.parent = curr;
+    let neighbors = getNeighbors(current, tableData)
 
-        if(!open.has(neighbor.row + "-" + neighbor.col)) { 
-          open.set(neighbor.row + "-" + neighbor.col, neighbor);
+    for (let i = 0; i < neighbors.length; i++) {
+      let neighbor = neighbors[i];
+
+      if (!closedSet.includes(neighbor)) {
+        let possibleG = current.gCost + 1;
+
+        if (!openSet.includes(neighbor)) {
+          openSet.push(neighbor);
+        } else if (possibleG >= neighbor.gCost) {
+          continue;
         }
+
+        neighbor.gCost = possibleG;
+        neighbor.hCost = heuristic(neighbor, end);
+        neighbor.fCost = neighbor.gCost + neighbor.hCost;
+        neighbor.parent = current;
       }
     }
   }
+  //no solution by default
+  return [];
 }
