@@ -4,6 +4,7 @@ import createPersistedState from 'use-persisted-state';
 //a persistedState enables everything to be the same even after refreshing or re-rendering 
 // what is localStorage? 
 const useDataState = createPersistedState('tableData', localStorage);
+const useDataState2 = createPersistedState('algoType', localStorage);
 
 //create each individual node that will be stored in our tabel 
 function createNode(rowVal, colVal){
@@ -42,11 +43,17 @@ export const setDataDef = () => {
 
 };
 
+const algo = () => {
+  let algo = "A*";
+
+  return {algo};
+}
 //creates a context (global for all react components) which has the 
 //table, setData, algorithimType, setAlgorithim
 export const DataContext = createContext({
   tableData: initData,
   setTableData: setDataDef,
+  algoType: algo,
 });
 
 //main function that makes us a provider which has the table data, algoType and functions to change them if needed
@@ -54,6 +61,7 @@ export const DataContext = createContext({
 export function DataProvider({ children }){
   const { Provider } = DataContext;
   const [tableData, setTableData] = useDataState(initData);
-  return (<Provider value={{ tableData, setTableData}}>{children}</Provider>
+  const [algoType] = useDataState2(algo);
+  return (<Provider value={{ tableData, setTableData, algoType}}>{children}</Provider>
   );
 }

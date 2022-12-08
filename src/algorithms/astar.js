@@ -110,6 +110,10 @@ export function astar(tableData, setTableData, start, end) {
         continue;
       }
 
+      if(neighbor.className !== "end") { 
+        
+      }
+
       // if (!closedSet.includes(neighbor)) {
       //   let possibleG = current.gCost + 1;
 
