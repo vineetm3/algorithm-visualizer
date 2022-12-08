@@ -125,11 +125,7 @@ export const Visualizer = () => {
             <div className='button-bar'>
                 <button className='clear-grid-btn' onClick={handleClearGrid}>Clear Grid</button>
                 <button className='clear-walls-btn' onClick={handleClearWalls}>Clear Walls</button>
-               <button className='visualize-btn' onClick={() => {
-                    if(algorithmType === 'A*'){
-                        astar(tableData, setTableData, start, end);
-                    }
-               }}>Visualize</button>
+               <button className='visualize-btn' onClick={() => {astar(tableData, setTableData, start, end);}}>Visualize</button>
                 <select name="Items to Place" onClick={(event) => setNode(event.target.value)}>
                     <option value="Walls">Walls</option>
                     <option value="Start">Start</option>
