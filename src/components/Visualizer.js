@@ -26,12 +26,12 @@ let stop;
 function updateObjects(table, numRows, numCols) {
   for (let row = 0; row < numRows; row++) {
     for (let col = 0; col < numCols; col++) {
-      table[row][col].gCost = Math.sqrt(
+      table[row][col].gCost = Math.round(Math.sqrt(
         (row - start.row) ** 2 + (col - start.col) ** 2
-      );
-      table[row][col].fCost = Math.sqrt(
+      ));
+      table[row][col].fCost = Math.round(Math.sqrt(
         (row - end.row) ** 2 + (col - end.col) ** 2
-      );
+      ));
       table[row][col].fCost = table[row][col].gCost + table[row][col].fCost;
     }
   }
@@ -172,6 +172,19 @@ export const Visualizer = () => {
     return nodesInShortestPathOrder.reverse();
   }
 
+  function displayHeuristics(tableData, start, end){
+    for (let i = 0; i < numRows; i++) {
+      for (let j = 0; j < numCols; j++) {
+          if((i === start.row && j === start.col) || (i === end.row && j === end.col)){
+            continue;
+          }
+          else{
+            document.getElementById(i + "-" + j).innerHTML = "F Cost: <br>" + tableData.table[i][j].fCost
+          }
+      }
+    }
+  }
+
   return (
     <div className="main-content">
       <table cellSpacing={"0"}>
@@ -212,6 +225,7 @@ export const Visualizer = () => {
               setDate(stop - begin);
               //delta = stop - begin;
               glowUp(path.path);
+              displayHeuristics(tableData, start, end);
             } 
             else if (algoType.algo === "DFS") {
               console.log(algoType.algo);

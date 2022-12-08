@@ -37,31 +37,9 @@ export function getNeighbors(currentNode, tableData) {
   return neighbors;
 }
 
-function getDistance(nodeA, nodeB) { 
-  let distX = Math.abs(nodeA.row - nodeB.row); 
-  let distY = Math.abs(nodeA.col - nodeB.col);
-
-  if(distX > distY) { 
-    return 14*distY + 10*(distX - distY);
-  }
-  return 14*distX + 10*(distY - distX)
-}
-
-// function reTracePath(start, end) { 
-//   let path = new Array();
-//   let curr = end; 
-
-//   while(curr !== start) { 
-//     path.push(curr);
-//     curr = curr.parent;
-//   }
-  
-//   return path.reverse();
-// }
-
 function heuristic(position0, position1) {
-  let d1 = Math.abs(position1.x - position0.x);
-  let d2 = Math.abs(position1.y - position0.y);
+  let d1 = (Math.abs(position1.x - position0.x));
+  let d2 = (Math.abs(position1.y - position0.y));
 
   return (d1 + d2);
 }
