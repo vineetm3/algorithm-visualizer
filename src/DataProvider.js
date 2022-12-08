@@ -23,8 +23,8 @@ function createNode(rowVal, colVal){
 //creates our main table that we will eventually see on the screen 
 //NOTE 
 const initData = () => {
-        let numRows =  5;
-        let numCols = 5;
+        let numRows =  10;
+        let numCols = 10;
 
         const table = [];
         for (let row = 0; row < numRows; row++) {

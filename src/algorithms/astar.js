@@ -17,8 +17,8 @@
  */
 
 //might need to use a different dataStructures
-const open = new Map();
-const closed = new Set();
+// const open = new Map();
+// const closed = new Set();
 
 export function getNeighbors(currentNode, tableData) {
   //is this the right data-structure?
@@ -47,23 +47,23 @@ function getDistance(nodeA, nodeB) {
   return 14*distX + 10*(distY - distX)
 }
 
-function reTracePath(start, end) { 
-  let path = new Array();
-  let curr = end; 
+// function reTracePath(start, end) { 
+//   let path = new Array();
+//   let curr = end; 
 
-  while(curr !== start) { 
-    path.push(curr);
-    curr = curr.parent;
-  }
+//   while(curr !== start) { 
+//     path.push(curr);
+//     curr = curr.parent;
+//   }
   
-  return path.reverse();
-}
+//   return path.reverse();
+// }
 
 function heuristic(position0, position1) {
   let d1 = Math.abs(position1.x - position0.x);
   let d2 = Math.abs(position1.y - position0.y);
 
-  return 14(d1 + d2);
+  return (d1 + d2);
 }
 
 export function astar(tableData, setTableData, start, end) {
@@ -106,23 +106,34 @@ export function astar(tableData, setTableData, start, end) {
     for (let i = 0; i < neighbors.length; i++) {
       let neighbor = neighbors[i];
 
-      if(neighbor.className === "wall") { 
+      if(neighbor.className === "wall" || closedSet.includes(neighbor) ) { 
         continue;
       }
 
-      if (!closedSet.includes(neighbor)) {
-        let possibleG = current.gCost + 1;
+      // if (!closedSet.includes(neighbor)) {
+      //   let possibleG = current.gCost + 1;
 
-        if (!openSet.includes(neighbor)) {
-          openSet.push(neighbor);
-        } else if (possibleG >= neighbor.gCost) {
-          continue;
-        }
+      //   if (!openSet.includes(neighbor)) {
+      //     openSet.push(neighbor);
+      //   } else if (possibleG >= neighbor.gCost) {
+      //     continue;
+      //   }
 
-        neighbor.gCost = possibleG;
+      //   neighbor.gCost = possibleG;
+      //   neighbor.hCost = heuristic(neighbor, end);
+      //   neighbor.fCost = neighbor.gCost + neighbor.hCost;
+      //   neighbor.parent = current;
+      // }
+
+      let costToMove = current.gCost + heuristic(current, neighbor);
+      if(costToMove < neighbor.gCost || !openSet.includes(neighbor)) { 
+        neighbor.gCost = costToMove; 
         neighbor.hCost = heuristic(neighbor, end);
-        neighbor.fCost = neighbor.gCost + neighbor.hCost;
         neighbor.parent = current;
+
+        if(!openSet.includes(neighbor)) { 
+          openSet.push(neighbor);
+        }
       }
     }
   }
