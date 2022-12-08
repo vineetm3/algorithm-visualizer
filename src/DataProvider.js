@@ -10,7 +10,7 @@ const useDataState2 = createPersistedState('algoType', localStorage);
 function createNode(rowVal, colVal){
     return {
         className:'unvisited',
-        seen: 'false', 
+        seen: false, 
         row: rowVal, 
         col: colVal, 
         //these we need to calculate before hand 

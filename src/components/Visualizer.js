@@ -48,7 +48,7 @@ export const Visualizer = () => {
   let numCols = tableData.numCols;
 
   const [nodeType, setNode] = useState("Walls");
-  const [date, setDate] = useState("tbd");
+  const [date, setDate] = useState(0);
 
   const handleClick = (event) => {
     let id = event.currentTarget.id;
@@ -146,11 +146,28 @@ export const Visualizer = () => {
       ) {
         continue;
       }
-      document.getElementById(
-        path[i].row + "-" + path[i].col
-      ).style.backgroundColor = "yellow";
+      if(algoType.algo === "A*") {
+        document.getElementById(
+            path[i].row + "-" + path[i].col
+          ).style.backgroundColor = "yellow";
+      }
+      if(algoType.algo === "BFS") {
+        document.getElementById(
+            path[i].row + "-" + path[i].col
+          ).style.backgroundColor = "LightGreen";
+      }
     }
   };
+
+  function getNodesInShortestPathOrder(finishNode) {
+    const nodesInShortestPathOrder = [];
+    let currentNode = finishNode;
+    while (currentNode !== null) {
+      nodesInShortestPathOrder.unshift(currentNode);
+      currentNode = currentNode.parent;
+    }
+    return nodesInShortestPathOrder.reverse();
+  }
 
   return (
     <div className="main-content">
@@ -199,7 +216,14 @@ export const Visualizer = () => {
             } 
             else if (algoType.algo === "BFS") {
               console.log(algoType.algo);
-              let path = bfs(tableData, setTableData, start, end);
+              begin = Date.now();
+              let path = bfs(tableData, start, end);
+              stop = Date.now();
+              setDate(stop - begin);
+              console.log(path.length);
+              let realPath = getNodesInShortestPathOrder(end);
+              glowUp(realPath);
+              
             } 
             else if (algoType.algo === "Dijkstra") {
               console.log(algoType.algo);
@@ -218,7 +242,7 @@ export const Visualizer = () => {
         </select>
       </div>
       <div>
-        <h3>Time to Run (seconds): {date / 1000}</h3>
+        <h3>Time to Run {algoType.algo} (seconds): {date / 1000000}</h3>
       </div>
     </div>
   );
