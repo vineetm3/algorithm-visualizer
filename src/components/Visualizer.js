@@ -4,6 +4,7 @@ import { DataContext } from '../DataProvider';
 import './Visualizer.css';
 import { astar } from '../algorithms/astar';
 import { getNeighbors } from '../algorithms/astar';
+import { yellow } from '@mui/material/colors';
 
 /*
 1) Have a main visualize method where we pass in the algo name
@@ -109,6 +110,16 @@ export const Visualizer = () => {
         return true;
     }
 
+    const glowUp = (path) => { 
+        console.log(path);
+        for(let i = 0; i < path.length; i++) { 
+            if(tableData.table[path[i].row][path[i].col].className === 'start' || tableData.table[path[i].row][path[i].col].className === 'end') { 
+                continue;
+            }
+            document.getElementById(path[i].row +'-'+path[i].col).style.backgroundColor = "yellow";
+        }
+    }
+
     return (
         <div className='main-content'>
             <table cellSpacing={'0'}>
@@ -125,7 +136,10 @@ export const Visualizer = () => {
             <div className='button-bar'>
                 <button className='clear-grid-btn' onClick={handleClearGrid}>Clear Grid</button>
                 <button className='clear-walls-btn' onClick={handleClearWalls}>Clear Walls</button>
-               <button className='visualize-btn' onClick={() => {astar(tableData, setTableData, start, end);}}>Visualize</button>
+               <button className='visualize-btn' onClick={() => {
+                let path = astar(tableData, setTableData, start, end);
+                glowUp(path);
+                }}>Visualize</button>
                 <select name="Items to Place" onClick={(event) => setNode(event.target.value)}>
                     <option value="Walls">Walls</option>
                     <option value="Start">Start</option>

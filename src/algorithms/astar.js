@@ -63,7 +63,7 @@ function heuristic(position0, position1) {
   let d1 = Math.abs(position1.x - position0.x);
   let d2 = Math.abs(position1.y - position0.y);
 
-  return d1 + d2;
+  return 14(d1 + d2);
 }
 
 export function astar(tableData, setTableData, start, end) {
@@ -105,6 +105,10 @@ export function astar(tableData, setTableData, start, end) {
 
     for (let i = 0; i < neighbors.length; i++) {
       let neighbor = neighbors[i];
+
+      if(neighbor.className === "wall") { 
+        continue;
+      }
 
       if (!closedSet.includes(neighbor)) {
         let possibleG = current.gCost + 1;
