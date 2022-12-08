@@ -16,7 +16,8 @@ function createNode(rowVal, colVal){
         //these we need to calculate before hand 
         hCost: null, 
         gCost: null, 
-        fCost: null
+        fCost: null,
+        parent: null
     };
 }
 
@@ -25,6 +26,7 @@ function createNode(rowVal, colVal){
 const initData = () => {
         let numRows =  5;
         let numCols = 5;
+
         const table = [];
         for (let row = 0; row < numRows; row++) {
           const currentRow = [];
@@ -33,7 +35,7 @@ const initData = () => {
           }
           table.push(currentRow);
         }
-        return { table, numRows, numCols };
+        return { table, numRows, numCols};
 }
 
 // some random function that i got no clue what it does 

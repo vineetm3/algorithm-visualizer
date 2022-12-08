@@ -4,6 +4,7 @@ import { DataContext } from '../DataProvider';
 import './Visualizer.css';
 import { astar } from '../algorithms/astar';
 import { getNeighbors } from '../algorithms/astar';
+import { yellow } from '@mui/material/colors';
 
 /*
 1) Have a main visualize method where we pass in the algo name
@@ -13,17 +14,19 @@ import { getNeighbors } from '../algorithms/astar';
 */
 let setStartNode = false;
 let setEndNode = false;
+let start; 
+let end; 
 //let data = getData();
 //let table = data.table;
-let start;
-let end;
+//export let start;
+//export let end;
 
 function updateObjects(table, numRows, numCols) { 
     for(let row = 0; row < numRows; row++) { 
         for(let col = 0; col < numCols; col++) { 
-            table[row][col].distanceToStartNode = Math.sqrt((row - start.row)**2 + (col - start.col)**2);
-            table[row][col].distanceToFinishNode = Math.sqrt((row - end.row)**2 + (col - end.col)**2);
-            table[row][col].combinedDistance = table[row][col].distanceToStartNode + table[row][col].distanceToFinishNode;
+            table[row][col].gCost = Math.sqrt((row - start.row)**2 + (col - start.col)**2);
+            table[row][col].hCost = Math.sqrt((row - end.row)**2 + (col - end.col)**2);
+            table[row][col].fCost = table[row][col].distanceToStartNode + table[row][col].distanceToFinishNode;
         }
     }
     console.log(table);
@@ -33,6 +36,7 @@ function updateObjects(table, numRows, numCols) {
 
 export const Visualizer = () => {
     const {tableData, setTableData, algorithmType} = useContext(DataContext);
+
     let numRows = tableData.numRows;
     let numCols = tableData.numCols;
 
@@ -109,6 +113,12 @@ export const Visualizer = () => {
         return true;
     }
 
+    const glowUpPath = (path) => { 
+        path.array.forEach(element => {
+            document.getElementById(element.row + "-" + element.col).style.backgroundColor = yellow;
+        });
+    }
+
     return (
         <div className='main-content'>
             <table cellSpacing={'0'}>
@@ -127,7 +137,10 @@ export const Visualizer = () => {
                 <button className='clear-walls-btn' onClick={handleClearWalls}>Clear Walls</button>
                <button className='visualize-btn' onClick={() => {
                     if(algorithmType === 'A*'){
-                        astar(tableData, setTableData, start, end);
+                        console.log("going to astar")
+                        let path = astar(tableData, setTableData, start, end);
+                        console.log(path);
+                        glowUpPath(path);
                     }
                }}>Visualize</button>
                 <select name="Items to Place" onClick={(event) => setNode(event.target.value)}>

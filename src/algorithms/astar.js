@@ -1,8 +1,5 @@
-import React, { useContext } from "react";
-import { DataContext } from "../DataProvider";
-
-/*
- * Algo from: https://www.youtube.com/watch?v=mZfyt03LDH4&list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW&index=3 
+/**
+ * Algo from: https://www.youtube.com/watch?v=mZfyt03LDH4&list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW&index=3
  */
 
 /**
@@ -19,138 +16,93 @@ import { DataContext } from "../DataProvider";
  * fCost = combined dis
  */
 
-export function getNeighbors(currentNode, tableData) { 
-    //is this the right data-structure? 
-    let neighbors = [];
+//might need to use a different dataStructures
+const open = new Map();
+const closed = new Set();
 
-    for (let i = currentNode.row - 1; i <= currentNode.row + 1; i++) {
-      for (let j = currentNode.col - 1; j <= currentNode.col + 1; j++) {
-          // check if (i,j) is in array bounds
-          if (i >= 0 && j >= 0 && i < tableData.numRows && j < tableData.numCols) {
-              // the point isn't its own neighbour
-              if (!(i === currentNode.row && j === currentNode.col))
-                  neighbors.push(tableData.table[i][j]);
-          }
+export function getNeighbors(currentNode, tableData) {
+  //is this the right data-structure?
+  let neighbors = [];
+
+  for (let i = currentNode.row - 1; i <= currentNode.row + 1; i++) {
+    for (let j = currentNode.col - 1; j <= currentNode.col + 1; j++) {
+      // check if (i,j) is in array bounds
+      if (i >= 0 && j >= 0 && i < tableData.numRows && j < tableData.numCols) {
+        // the point isn't its own neighbour
+        if (!(i === currentNode.row && j === currentNode.col))
+          neighbors.push(tableData.table[i][j]);
       }
+    }
   }
-
-    // //CHECK IF A CORNER:
-    // if(currentNode.row === 0 && currentNode.col === 0 ){
-    //   neighbors.push(tableData.table[1][0])
-    //   neighbors.push(tableData.table[1][1])
-    //   neighbors.push(tableData.table[0][1])
-    // }
-    // else if(currentNode.row === 0 && currentNode.col === tableData.numCols-1){
-    //   neighbors.push(tableData.table[0][tableData.numCols-2])
-    //   neighbors.push(tableData.table[1][tableData.numCols-2])
-    //   neighbors.push(tableData.table[1][tableData.numCols-1])
-    // }
-    // else if(currentNode.row === tableData.numRows-1 && currentNode.col === 0){
-    //   neighbors.push(tableData.table[tableData.numRows-2][0])
-    //   neighbors.push(tableData.table[tableData.numRows-2][1])
-    //   neighbors.push(tableData.table[tableData.numRows-1][1])
-    // }
-    // else if(currentNode.row === tableData.numRows-1 && currentNode.col === tableData.numCols-1){
-    //   neighbors.push(tableData.table[tableData.numRows-1][tableData.numCols-2])
-    //   neighbors.push(tableData.table[tableData.numRows-2][tableData.numCols-2])
-    //   neighbors.push(tableData.table[tableData.numRows-2][tableData.numCols-1])
-    // }
-
-    // //CHECK IF HORIZONTAL EDGE:
-    // else if(currentNode.row === 0){
-    //   for(let rowNumber = currentNode.row; rowNumber<currentNode.row+2; rowNumber++){
-    //     for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
-    //       if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-    //         neighbors.push(tableData.table[rowNumber][colNumber]);
-    //       }
-    //     }
-    //   }
-    // }
-    // else if(currentNode.row === tableData.numRows-1){
-    //   for(let rowNumber = currentNode.row; rowNumber<currentNode.row-2; rowNumber--){
-    //     for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
-    //       if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-    //         neighbors.push(tableData.table[rowNumber][colNumber]);
-    //       }
-    //     }
-    //   }
-    // }
-
-    // //CHECK IF VERTICAL EDGE:
-    // else if(currentNode.col === 0){
-    //   for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
-    //     for(let colNumber = currentNode.col; colNumber < currentNode.col+2; colNumber++){
-    //       if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-    //         neighbors.push(tableData.table[rowNumber][colNumber]);
-    //       }
-    //     }
-    //   }
-    // }
-    // else if(currentNode.col === tableData.numCols-1){
-    //   for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
-    //     for(let colNumber = currentNode.col-1; colNumber < currentNode.col+1; colNumber++){
-    //       if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-    //         neighbors.push(tableData.table[rowNumber][colNumber]);
-    //       }
-    //     }
-    //   }
-    // }
-
-    // //Must be a node surrounded by neighbor nodes
-    // else{
-    //   console.log("Entered Other");
-    //   for(let rowNumber = currentNode.row-1; rowNumber<currentNode.row+2; rowNumber++){
-    //     for(let colNumber = currentNode.col-1; colNumber < currentNode.col+2; colNumber++){
-    //         if(!(rowNumber === currentNode.row && colNumber === currentNode.col) && tableData.table[rowNumber][colNumber].className !== 'start' && tableData.table[rowNumber][colNumber].className !== 'wall'){
-    //           neighbors.push(tableData.table[rowNumber][colNumber]);
-    //         }
-    //     }
-    //   }
-    // }
-
-    return neighbors;
+  return neighbors;
 }
 
-export function astar(tableData, setTableData, startNode, endNode) {
+function getDistance(nodeA, nodeB) { 
+  let distX = Math.abs(nodeA.row - nodeB.row); 
+  let distY = Math.abs(nodeA.col - nodeB.col);
+
+  if(distX > distY) { 
+    return 14*distY + 10*(distX - distY);
+  }
+  return 14*distX + 10*(distY - distX)
+}
+
+function reTracePath(start, end) { 
+  let path = new Array();
+  let curr = end; 
+
+  while(curr !== start) { 
+    path.push(curr);
+    curr = curr.parent;
+  }
+  
+  return path.reverse();
+}
+
+export function astar(tableData, setTableData, start, end) {
   console.log("In astar");
 
-  //create arrays
-  const open = [];
-  const closed = [];
+  //has value when start node has not even been decided ... weird bug to fix later
+  //start has null values for distance, need to fix
+  console.log(start);
+  open.set(start.row + "-" + start.col, start);
+  console.log(open);
+  
+  while (open.size > 0) {
+    let curr = open.get(start.row + "-" + start.col);
+    let deleted = "";
 
-  //add the start node first
-  open.push(startNode);
-
-  //while we have not reached the end node...
-  while (open.length() > 0) {
-
-    //sort the availible nodes by fCost (least fCost to greatest fCost) note: fCost is the sum of the distance to the startNode and the distance to the endNode
-    let sortedOpen = open.sort((a, b) => (a.fCost > b.fCost) ? 1 : (a.fCost < b.fCost) ? -1 : 0);
-
-    //let the currentNode to be evaluated be the node with the lowest fCost
-    let curr = sortedOpen[0];
+    open.forEach(element => {
+      if(element.fCost < curr.fCost || element.fCost === curr.fCost && element.hCost < curr.hCost) { 
+        curr = element;
+        deleted = curr.row + "" + curr.col;
+      }
+    });
     
-    //remove the node from the open list
-    open.shift();
+    open.delete(deleted);
+    closed.add(curr);
 
-    //add the currentNode to the already evaluated list
-    closed.push(curr);
-
-    //currentNode is the end node
-    if(curr.hCost === 0){
-      console.log("CurrentNode is End Node");
-      return;
+    if (curr === end) {
+      console.log("mission accomplished");
+      return reTracePath(start, end);
     }
 
-    //get the surrounding neighbors of the currentNode
     let neighbors = getNeighbors(curr, tableData);
 
-    //Implement for each loop here:
+    for (let neighbor of neighbors) {
+      if (neighbor.className === "Wall" || closed.has(neighbor)) {
+        continue;
+      }
+      let newCostToNeighbor = curr.gCost + getDistance(curr, neighbor);
+      if(newCostToNeighbor < neighbor.gCost || newCostToNeighbor < !open.has(neighbor.row + "-" + neighbor.col)) { 
+        neighbor.gCost = newCostToNeighbor; 
+        neighbor.hCost = getDistance(neighbor, end);
+        neighbor.parent = curr;
 
-    neighbors.filter((neighbor) => !(neighbor.className === 'wall') && !closed.includes(neighbor)).forEach((neighbor) => {
-      //do A* stuff
-    })
-
+        if(!open.has(neighbor.row + "-" + neighbor.col)) { 
+          open.set(neighbor.row + "-" + neighbor.col, neighbor);
+        }
+      }
+    }
   }
 }
-
