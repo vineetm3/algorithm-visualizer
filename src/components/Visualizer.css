@@ -8,7 +8,7 @@
 }
 
 .button-bar{
-    padding-top: 1%;
+    padding-top: 5.5%;
     display: flex;
     min-width: inherit;
     justify-content: space-between;
@@ -23,7 +23,7 @@
     transition: 0.2s;
 }
 
-.clear-walls-btn:hover, .clear-grid-btn:hover{
+.clear-walls-btn:hover, .clear-grid-btn:hover, .visualize-btn:hover{
     transform: scale(1.05);
 }
 
@@ -35,10 +35,20 @@
     transition: 0.2s;
 }
 
+.visualize-btn{
+    background-color: #91E0FF;
+    border-style: none;
+    padding: 10px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
 tr > td{
-    width:50px;
+    width: 50px;
     height:50px;
     border:1px solid;
-    margin:0;
-    padding:0;
+    padding:0px;
+    font-size: 5px;
+    position: relative;
+    top: 60px;
 }
