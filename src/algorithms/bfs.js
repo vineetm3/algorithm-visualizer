@@ -1,20 +1,17 @@
 export function bfs(grid, startNode, finishNode) {
-  console.log("in bfs");
 
   const visitedNodesInOrder = [];
   let nextNodesStack = [startNode];
 
-  console.log(nextNodesStack);
   while (nextNodesStack.length) {
     const currentNode = nextNodesStack.shift();
-    if (currentNode === finishNode) {
-        console.log(visitedNodesInOrder);
-        return visitedNodesInOrder;
+    if(currentNode.className === "wall") { 
+      continue;
     }
 
-    //console.log(currentNode);
-    console.log(!currentNode.className === "wall" &&
-    (currentNode.className === "start" || !currentNode.seen));
+    if (currentNode === finishNode) {
+        return visitedNodesInOrder;
+    }
 
     if (
       !(currentNode.className === "wall") &&

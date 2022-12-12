@@ -26,7 +26,7 @@ function createNode(rowVal, colVal){
 //NOTE 
 const initData = () => {
         let numRows =  8;
-        let numCols = 10;
+        let numCols = 15;
 
         const table = [];
         for (let row = 0; row < numRows; row++) {
