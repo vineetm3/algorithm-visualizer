@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { DataContext } from '../DataProvider';
 
 export const NavBar = () => {
-    const {tableData, setTableData, algoType} = useContext(DataContext);
+    const {algoType} = useContext(DataContext);
 
     return (
         <AppBar postion='static'>

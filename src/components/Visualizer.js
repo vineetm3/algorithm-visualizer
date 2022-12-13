@@ -229,13 +229,13 @@ export const Visualizer = () => {
         </button>
         <button
           className="visualize-btn"
-          onClick={() => {
+          onClick={async () => {
             if (algoType.algo === "A*") {
               path.path = [];
               begin = 0;
               stop = 0;
               begin = Date.now();
-              path.path = astar(tableData, setTableData, start, end);
+              path.path = await astar(tableData, setTableData, start, end);
               stop = Date.now();
               setDate(stop - begin);
               glowUp(path.path);
@@ -265,7 +265,7 @@ export const Visualizer = () => {
         </button>
         <select
           name="Items to Place"
-          onClick={(event) => setNode(event.target.value)}
+          onChange={(event) => setNode(event.target.value)}
         >
           <option value="Walls">Walls</option>
           <option value="Start">Start</option>

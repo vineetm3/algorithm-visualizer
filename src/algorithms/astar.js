@@ -3,6 +3,7 @@
  * hCost = dis to end
  * fCost = combined dis
  */
+const timer = ms => new Promise(res => setTimeout(res,ms));
 
 export function getNeighbors(currentNode, tableData) {
   //is this the right data-structure?
@@ -28,7 +29,7 @@ function heuristic(position0, position1) {
   return d1 + d2;
 }
 
-export function astar(tableData, setTableData, start, end) {
+export async function astar(tableData, setTableData, start, end) {
   console.log(start);
   console.log(end);
   let openSet = [];
@@ -94,6 +95,7 @@ export function astar(tableData, setTableData, start, end) {
         }
       }
     }
+    await timer(20);
   }
   //no solution by default
   return [];
