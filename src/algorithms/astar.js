@@ -21,19 +21,9 @@ export function getNeighbors(currentNode, tableData) {
   return neighbors;
 }
 
-function getDistance(nodeA, nodeB) {
-  let distX = Math.abs(nodeA.row - nodeB.row);
-  let distY = Math.abs(nodeA.col - nodeB.col);
-
-  if (distX > distY) {
-    return 14 * distY + 10 * (distX - distY);
-  }
-  return 14 * distX + 10 * (distY - distX);
-}
-
 function heuristic(position0, position1) {
-  let d1 = (Math.abs(position1.x - position0.x));
-  let d2 = (Math.abs(position1.y - position0.y));
+  let d1 = (Math.abs(position1.col - position0.col));
+  let d2 = (Math.abs(position1.row - position0.row));
 
   return d1 + d2;
 }
@@ -86,6 +76,7 @@ export function astar(tableData, setTableData, start, end) {
         document.getElementById(
           neighbor.row + "-" + neighbor.col
         ).style.backgroundColor = "green";
+        neighbor.className = "Visited"
       }
 
       if (neighbor.className !== "end") {
@@ -96,6 +87,7 @@ export function astar(tableData, setTableData, start, end) {
         neighbor.gCost = costToMove;
         neighbor.hCost = heuristic(neighbor, end);
         neighbor.parent = current;
+        neighbor.fCost = neighbor.gCost + neighbor.hCost;
 
         if (!openSet.includes(neighbor)) {
           openSet.push(neighbor);
