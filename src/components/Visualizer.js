@@ -3,11 +3,7 @@ import React, { useContext } from "react";
 import { DataContext } from "../DataProvider";
 import "./Visualizer.css";
 import { astar } from "../algorithms/astar";
-import { getNeighbors } from "../algorithms/astar";
-import { yellow } from "@mui/material/colors";
 import { bfs } from "../algorithms/bfs";
-import { dfs } from "../algorithms/dfs";
-import { dijkstra } from "../algorithms/dijkstra";
 /*
 1) Have a main visualize method where we pass in the algo name
 2) implement each algo taking in grid, start, end 
@@ -31,7 +27,8 @@ function updateObjects(table, numRows, numCols) {
       table[row][col].fCost = Math.round(Math.sqrt(
         (row - end.row) ** 2 + (col - end.col) ** 2
       ));
-      table[row][col].fCost = table[row][col].gCost + table[row][col].fCost;
+      table[row][col].fCost = table[row][col].gCost + table[row][col].hCost;
+      console.log(table[row][col]);
     }
   }
 
@@ -173,18 +170,18 @@ export const Visualizer = () => {
     for (let i = 0; i < numRows; i++) {
       for (let j = 0; j < numCols; j++) {
           if((i === start.row && j === start.col) || (i === end.row && j === end.col)){
-            if(i == start.row && j === start.col){ 
+            if(i === start.row && j === start.col){ 
               document.getElementById(i + "-" + j).innerHTML = "Start"
             }
             else { 
-              if(i == end.row && j === end.col){ 
+              if(i === end.row && j === end.col){ 
                 document.getElementById(i + "-" + j).innerHTML = "End"
               }
             }
             continue;
           }
-          else{
-            document.getElementById(i + "-" + j).innerHTML = "F Cost: <br>" + tableData.table[i][j].fCost
+          else if(tableData.table[i][j].className === "Visited"){
+            document.getElementById(i + "-" + j).innerHTML = "F Cost: " + tableData.table[i][j].fCost + "<br>H Cost: " + tableData.table[i][j].hCost + "<br>G Cost: " + tableData.table[i][j].gCost
           }
       }
     }
@@ -252,7 +249,7 @@ export const Visualizer = () => {
               begin = 0; 
               stop = 0;
               begin = Date.now();
-              let fakePath = bfs(tableData, start, end);
+              bfs(tableData, start, end);
               stop = Date.now();
               setDate(stop - begin);
               path.path = getNodesInShortestPathOrder(end);
