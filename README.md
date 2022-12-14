@@ -6,4 +6,6 @@ To-Do:
 - Implement Dijkstra's Algorithm
 - Implement DFS
 
-Authors: @MOcah and @vineetm3
+Authors: Michael Neal and Vineet Marri
+
+https://m0cah.github.io/algorithm-visualizer/ 
