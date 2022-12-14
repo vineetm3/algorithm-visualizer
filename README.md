@@ -6,4 +6,4 @@ To-Do:
 - Implement Dijkstra's Algorithm
 - Implement DFS
 
-Authors: Michael Neal and Vineet Marri 
+Authors: Michael and Vineet
